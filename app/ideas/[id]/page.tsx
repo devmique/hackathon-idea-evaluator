@@ -4,7 +4,9 @@ import AISuggestions from '@/components/ai-suggestions'
 import ScoreDisplay from '@/components/score-display'
 import EvaluationForm from '@/components/evaluation-form'
 import { getIdea, getEvaluationsByIdea, getScoresForIdea } from '@/lib/db'
-
+// Add these imports at the top
+import { generateIdeaSuggestions } from '@/lib/ai'
+import { updateIdeaAiSuggestions } from '@/lib/db'
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const idea = await getIdea(parseInt(id, 10))
@@ -31,6 +33,8 @@ export default async function IdeaDetailsPage({ params }: IdeaDetailsPageProps) 
   if (!idea) {
     notFound()
   }
+ 
+
 
   const evaluations = await getEvaluationsByIdea(ideaId)
   const scores = await getScoresForIdea(ideaId)
@@ -100,9 +104,15 @@ export default async function IdeaDetailsPage({ params }: IdeaDetailsPageProps) 
                 </div>
               </div>
 
-              {idea.ai_suggestions && (
-                <AISuggestions suggestions={idea.ai_suggestions} />
-              )}
+             
+                <AISuggestions
+  ideaId={ideaId}
+  ideaName={idea.name}
+  description={idea.description}
+  suggestions={idea.ai_suggestions}
+/>
+
+         
 
               {evaluations.length > 0 && (
                 <ScoreDisplay

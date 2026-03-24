@@ -1,34 +1,46 @@
-import { generateText } from 'ai'
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
-// Uses Vercel AI Gateway by default (no provider package needed)
-const DEFAULT_MODEL = 'openai/gpt-4o-mini'
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
-export async function generateIdeaSuggestions(ideaName: string, description: string): Promise<string> {
-  try {
-    const prompt = `You are an expert hackathon mentor evaluating startup ideas. 
-    
-An idea has been submitted with the following details:
+export async function generateIdeaSuggestions(
+  ideaName: string,
+  description: string
+): Promise<string> {
+
+  if (!process.env.GEMINI_API_KEY) {
+    return 'Missing GEMINI_API_KEY'
+  }
+
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5',
+  })
+
+  const prompt = `You are an expert hackathon mentor evaluating startup ideas.
+
+An idea has been submitted:
 - Name: ${ideaName}
 - Description: ${description}
 
-Please provide 3-4 specific, actionable suggestions to improve this idea and make it more viable for a hackathon competition. Focus on:
-1. How to strengthen the core value proposition
-2. How to make it more feasible to build within hackathon timeframe
-3. How to increase market appeal or impact
-4. Any potential technical or business challenges to address
+Provide 3-4 actionable suggestions:
+1. Improve value proposition
+2. Make it feasible in hackathon
+3. Increase impact
+4. Possible challenges
 
-Format your response as a numbered list with concise suggestions.`
+Format as numbered list.`
 
-    const result = await generateText({
-      model: DEFAULT_MODEL,
-      prompt,
-      temperature: 0.7,
-      maxTokens: 500,
-    })
+  try {
+    const result = await model.generateContent(prompt)
+    return result.response.text()
+  } catch (err: any) {
+    console.error(err)
 
-    return result.text
-  } catch (error) {
-    console.error('Error generating AI suggestions:', error)
-    return 'Unable to generate suggestions at this time. Please try again later.'
+    if (err.message?.includes('429')) {
+      await new Promise(res => setTimeout(res, 3000))
+      const retry = await model.generateContent(prompt)
+      return retry.response.text()
+    }
+
+    return 'Failed to generate suggestions.'
   }
 }

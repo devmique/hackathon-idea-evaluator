@@ -4,14 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 const TRACKS = [
-  'AI & Machine Learning',
-  'Web3 & Blockchain',
-  'Climate & Sustainability',
-  'FinTech',
-  'Healthcare & Biotech',
-  'Social Impact',
-  'Gaming & Metaverse',
-  'Other',
+  'Climate Change Resilience',
+  'Public Health & Telemedicine',
+  'Smart City',
+  'AI for Education'
 ]
 
 export default function SubmitForm() {

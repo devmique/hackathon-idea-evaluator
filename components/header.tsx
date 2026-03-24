@@ -6,12 +6,10 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">H</span>
-            </div>
+            
             <div>
               <h1 className="text-xl sm:text-2xl font-bold text-foreground">
-                Hackathon Evaluator
+                Hackathon Ideas Evaluator
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground">
                 Submit ideas, get evaluated, improve with AI
