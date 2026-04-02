@@ -1,35 +1,114 @@
-# v0-hackathon-idea-evaluator
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+# Hackathon Idea Evaluator
 
-## Built with v0
+A full-stack application for submitting, evaluating, and ranking hackathon ideas with AI-powered improvement suggestions.
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+## Features
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_i4spdGw9bxwgQix701fX7Y1DV5FQ)
+- Submit hackathon ideas with name, description, and track
+- Evaluate ideas across 8 weighted criteria (Innovation, Feasibility, Impact, etc.)
+- AI-generated improvement suggestions for each idea
+- Real-time leaderboard with automatic ranking
+- Duplicate evaluator prevention
+- Responsive design for all devices
+
+## Tech Stack
+
+- Next.js 16, React 19, TypeScript
+- PostgreSQL (Neon Serverless)
+- Vercel AI SDK v6 with OpenAI GPT-4o-mini
+- Tailwind CSS, React Hook Form, Zod
 
 ## Getting Started
 
-First, run the development server:
-
+### Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create `.env.development.local`:
 
-## Learn More
+```plaintext
+DATABASE_URL=your_neon_connection_string
+```
 
-To learn more, take a look at the following resources:
+### Initialize Database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+```shellscript
+npm run setup-db
+```
 
-<a href="https://v0.app/chat/api/kiro/clone/devmique/v0-hackathon-idea-evaluator" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
+### Run Development Server
+
+```shellscript
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+## Project Structure
+
+```plaintext
+app/
+├── api/
+│   ├── ideas/           # CRUD operations
+│   ├── evaluations/     # Evaluation submission
+│   └── suggestions/     # AI suggestions
+├── submit/              # Submit idea page
+├── evaluate/            # Evaluate page
+├── ideas/[id]/          # Idea details
+├── leaderboard/         # Rankings
+└── page.tsx             # Home/dashboard
+
+components/
+├── header.tsx
+├── idea-card.tsx
+├── ai-suggestions.tsx
+├── evaluation-form.tsx
+├── submit-form.tsx
+└── score-display.tsx
+
+lib/
+├── db.ts                # Database utilities
+└── ai.ts                # AI utilities
+```
+
+## API Endpoints
+
+- `GET /api/ideas` - Get all ideas
+- `POST /api/ideas` - Create new idea
+- `GET /api/ideas/[id]` - Get idea details
+- `POST /api/evaluations` - Submit evaluation
+- `POST /api/suggestions` - Generate AI suggestions
+
+
+## Scoring Criteria
+
+8 weighted criteria evaluated on 1-5 scale:
+
+- Innovation & Creativity (weight: 2)
+- Technical Feasibility (weight: 2)
+- Market Impact (weight: 2)
+- Market Potential (weight: 2)
+- Team Capability (weight: 2)
+- Scalability (weight: 2)
+- User Experience (weight: 1)
+- Business Model Viability (weight: 1)
+
+
+## Database Tables
+
+- `ideas` - Submitted ideas with AI suggestions
+- `evaluations` - Evaluation records (unique by idea + evaluator)
+- `scores` - Individual criterion scores
+
+
+## Environment Variables
+
+| Variable | Description
+|-----|-----
+| `DATABASE_URL` | Neon connection string (required)
+
+
